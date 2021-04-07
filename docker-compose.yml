@@ -1,0 +1,29 @@
+version: '3'
+services:
+  web:
+    stdin_open : true
+    environment:
+      #for windows environments not automatically reloading after code change
+      - CHOKIDAR_USEPOLLING=true
+    build: 
+      #context specifies the directory
+      context: .
+      #dockerfile specifies the dockerfile to be used for the build
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4000:3000"
+    # volumes:
+    #   #book mark this directory
+    #   - /app/node_modules
+    #   #map the current directory outside the containter to the 
+    #   #directory inside the container
+    #   - .:/app
+  #service to run tests
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app
+    command: ["npm", "run", "test"]
