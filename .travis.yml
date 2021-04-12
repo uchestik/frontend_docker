@@ -1,0 +1,15 @@
+language: generic
+
+# sudo: required means we need super level permissions
+sudo: required
+services:
+  # this tells travis to install docker in its running container
+  - docker
+
+# before_install specifies a series of commands that run before
+# tests are ran
+before_install:
+  - docker build -t uchestik/frontend_docker -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true uchestik/frontend_docker npm run test
