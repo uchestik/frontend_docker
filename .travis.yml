@@ -13,3 +13,30 @@ before_install:
 
 script:
   - docker run -e CI=true uchestik/frontend_docker npm run test
+
+#deployment instructions
+deploy:
+  # travis ci has built in providers such as aws, digital ocean etc.
+  provider: elasticbeanstalk
+  # the region of your beanstalk instance, look at the instance url
+  region: "us-east-2"
+  # app name as specifies in your beanstalk instance
+  app: "docker-react"
+  # environment name
+  env: "Dockerreact-env"
+  # travis will zip all your files and send them over to an s3 bucket
+  # which is ultimately a hard drive. Then travis alerts elastic beanstalk to 
+  # deploy the application. This s3 bucket is automatically generated
+  bucker_name: "elasticbeanstalk-us-east-2-035969879236"
+  # the elastic bean bucket will be re-used for every environment 
+  # so for every environment a new folder will be created
+  # by default this will be the app name
+  bucket_path: "docker-react"
+  on:
+    # deploy when code is pushed to the master branch
+    branch: master
+  # access keys have been saved as environment variables in travis
+  # for extra security
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
